@@ -113,7 +113,7 @@ This might be obvious, but traversing the array twice/thrice (as long as fewer t
 
 # Technique Practices and Solutions
 
-[Valid Anagram - LeetCode](https://leetcode.com/problems/valid-anagram/)
+### [Valid Anagram - LeetCode](https://leetcode.com/problems/valid-anagram/)
 
 ```python
  class Solution:
@@ -143,6 +143,7 @@ This might be obvious, but traversing the array twice/thrice (as long as fewer t
 
 ## Two Pointers
 
+<<<<<<< HEAD
 ### Pseudocode, iterating one pointer at start, one at end
 
 ```pseudocode
@@ -184,6 +185,11 @@ function fn(arr1, arr2):
 
 
  [Two Sum II - Input Array Is Sorted- LeetCode](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/)
+=======
+### [Two Sum II - Input Array Is Sorted- LeetCode](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/)
+
+
+>>>>>>> 7957c4ae7477c7aec3c309fc8d9474b41ab628b9
 
 ```python
 # Binary search: n log n 
@@ -236,7 +242,7 @@ class Solution:
                 return[left + 1, right + 1]	
 ```
 
-[3Sum - LeetCode](https://leetcode.com/problems/3sum/description/)
+### [3Sum - LeetCode](https://leetcode.com/problems/3sum/description/)
 
 ```python
 class Solution:
@@ -292,6 +298,52 @@ class Solution:
 
 
 ## Sliding Window
+
+### [Find the Index of the First Occurrence in a String - LeetCode](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/)
+
+```python
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        # Initialize a pointer `i` to traverse the `haystack` string
+        i = 0
+        
+        # Edge cases:
+        # If `needle` is longer than `haystack`, it can't be a substring of `haystack`
+        # Also, if `needle` is an empty string, return -1 as specified
+        if len(needle) > len(haystack) or needle == "":
+            return -1
+        
+        # Start sliding the window from the beginning of the `haystack`
+        # Ensure that there's enough space in `haystack` for the entire `needle`
+        # by checking the condition `i <= len(haystack) - len(needle)`
+        while i <= len(haystack) - len(needle):
+
+            # If the current character in `haystack` matches the first character of `needle`
+            # then there's a potential for `needle` to be a substring starting at this position
+            if haystack[i] == needle[0]:
+                
+                # Use a nested loop to iterate through the characters of `needle`
+                # and compare them with the corresponding characters in `haystack`
+                for char in range(len(needle)):
+                    
+                    # If any character doesn't match, break out of the inner loop
+                    # and continue sliding the window in the `haystack`
+                    if haystack[i + char] != needle[char]:
+                        break
+                    
+                    # If we've successfully matched all characters of `needle`
+                    # with a substring of `haystack`, return the starting index `i`
+                    if char == len(needle) - 1:
+                        return i
+              
+            # Move the pointer `i` to slide the window and check the next position
+            i += 1
+            
+        # If the loop completes without returning, it means `needle` wasn't found in `haystack`
+        return -1
+
+    # runtime: O(n * m)
+```
 
 
 
