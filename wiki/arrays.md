@@ -143,6 +143,46 @@ This might be obvious, but traversing the array twice/thrice (as long as fewer t
 
 ## Two Pointers
 
+### Pseudocode, iterating one pointer at start, one at end
+
+```pseudocode
+function fn(arr):
+    left = 0
+    right = arr.length - 1
+
+    while left < right:
+        Do some logic here depending on the problem
+        Do some more logic here to decide on one of the following:
+            1. left++
+            2. right--
+            3. Both left++ and right--
+```
+
+### Pseudocode, iterating together
+
+```pseudocode
+function fn(arr1, arr2):
+    i = j = 0
+    while i < arr1.length AND j < arr2.length:
+        Do some logic here depending on the problem
+        Do some more logic here to decide on one of the following:
+            1. i++
+            2. j++
+            3. Both i++ and j++
+
+    // Step 4: make sure both iterables are exhausted
+    // Note that only one of these loops would run
+    while i < arr1.length:
+        Do some logic here depending on the problem
+        i++
+
+    while j < arr2.length:
+        Do some logic here depending on the problem
+        j++
+```
+
+
+
  [Two Sum II - Input Array Is Sorted- LeetCode](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/)
 
 ```python
