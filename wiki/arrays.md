@@ -38,6 +38,7 @@ Common terms you see when doing problems involving arrays:
 - Clarify if there are duplicate values in the array. Would the presence of duplicate values affect the answer? Does it make the question simpler or harder?
 - When using an index to iterate through array elements, be careful not to go out of bounds.
 - Be mindful about slicing or concatenating arrays in your code. Typically, slicing and concatenating arrays would take O(n) time. Use start and end indices to demarcate a subarray/range where possible.
+- **Interview Tip**: Whenever you're trying to solve an array problem in-place, always consider the possibility of iterating backwards instead of forwards through the array. It can completely change the problem, and make it a lot easier.
 
 ## Time complexity
 
@@ -125,25 +126,38 @@ This might be obvious, but traversing the array twice/thrice (as long as fewer t
         '''
         if len(s) != len(t):
             return False
-
         char_map = {}
-        
+        # for each character, add 1 to counter (map[char]) with default = 0
         for char in s:
             char_map[char] = char_map.get(char, 0) + 1
-
+			# for each char in t, if the charmap doesnt have that char or the count is <= 0, its not an anagram
         for char in t:
             if char not in char_map or char_map[char] <= 0:
                 return False
-            char_map[char] -= 1
+            #decrease counter by one. if t shows up 4 times in s but 3 times in t, counter would be 1. not good
+            char_map[char] -= 1	
 
         return True
+      
+      
+# Alternative Sol
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+
+        countS, countT = {}, {}
+        
+        for i in range(len(s)):
+            countS[s[i]] = 1 + countS.get(s[i], 0)
+            countT[t[i]] = 1 + countT.get(t[i], 0)
+        return countS == countT
 ```
 
-
+---
 
 ## Two Pointers
 
-<<<<<<< HEAD
 ### Pseudocode, iterating one pointer at start, one at end
 
 ```pseudocode
@@ -161,35 +175,9 @@ function fn(arr):
 
 ### Pseudocode, iterating together
 
-```pseudocode
-function fn(arr1, arr2):
-    i = j = 0
-    while i < arr1.length AND j < arr2.length:
-        Do some logic here depending on the problem
-        Do some more logic here to decide on one of the following:
-            1. i++
-            2. j++
-            3. Both i++ and j++
+---
 
-    // Step 4: make sure both iterables are exhausted
-    // Note that only one of these loops would run
-    while i < arr1.length:
-        Do some logic here depending on the problem
-        i++
-
-    while j < arr2.length:
-        Do some logic here depending on the problem
-        j++
-```
-
-
-
- [Two Sum II - Input Array Is Sorted- LeetCode](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/)
-=======
-### [Two Sum II - Input Array Is Sorted- LeetCode](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/)
-
-
->>>>>>> 7957c4ae7477c7aec3c309fc8d9474b41ab628b9
+### Two Sum II - https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/
 
 ```python
 # Binary search: n log n 
@@ -343,6 +331,85 @@ class Solution:
         return -1
 
     # runtime: O(n * m)
+```
+
+### [Merge Sorted Array - LeetCode](https://leetcode.com/problems/merge-sorted-array/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        # Initialize three pointers:
+        # i: Pointing to the last element in the meaningful part of nums1 (ignoring the trailing zeros).
+        # j: Pointing to the last element in nums2.
+        # k: Pointing to the last element in nums1, where the merged elements will be placed.
+        i, j, k = m - 1, n - 1, m + n - 1
+
+        # While there are elements to consider in both nums1 and nums2
+        while i >= 0 and j >= 0:
+            # Compare the current elements at pointers i and j.
+            # Place the larger of the two at position k.
+            if nums1[i] > nums2[j]:
+                nums1[k] = nums1[i]
+                # Decrement the pointer i since we've placed the nums1[i] element in its correct position.
+                i -= 1
+            else:
+                nums1[k] = nums2[j]
+                # Decrement the pointer j since we've placed the nums2[j] element in its correct position.
+                j -= 1
+            # Decrement the pointer k to move to the next position for the next largest element.
+            k -= 1
+
+        # If there are remaining elements in nums2, copy them to nums1.
+        # Note: We don't need a similar loop for nums1 because if nums1 has remaining elements, 
+        # they are already in their correct position.
+        while j >= 0:
+            nums1[k] = nums2[j]
+            j -= 1
+            k -= 1
+
+
+            
+ # to test: this is what algorithm is doing:
+# nums1: [1,2,3,0,0,0], m = 3, 
+#				    i ^   k ^
+# nums2: = [2,5,6], n = 3
+#						  j ^
+
+# since the num at  j > i, we put j at k, the last index. j--, k--
+# nums1: [1,2,3,0,0,6], m = 3, 
+#				    i ^  k ^
+# nums2: = [2,5,6], n = 3
+#						j ^
+#continue comparing, if i > j, then we put i at k, i--, k-- until we get to beginning of array
+# if there are remaining elements in num2, just copy to nums1 until j has gone past 0.
+```
+
+[Remove Duplicates from Sorted Array II - LeetCode](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)
+
+```python
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        # next position for valid number: left
+        left = 1
+        numcount = 1
+        
+        for right in range(1, len(nums)):
+            # if duplicate, increase numcount 
+            if nums[right - 1] == nums[right]:
+                numcount += 1
+            # if unique number, reset numcount
+            else:
+                numcount = 1
+            # if numcount is 1 or 2, place number at "left". usually, left and right are pointing to the 
+            # same spot. so it's technicallly swapping with itself. right = left pointer
+            if numcount <= 2:
+                nums[left] = nums[right]
+            # move left by one
+                left += 1
+            # if numcount > 2: do NOT swap in place and instead leave left pointer where it was.
+                
+        return left
+
 ```
 
 
